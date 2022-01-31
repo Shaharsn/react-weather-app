@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import { City } from "../types/types";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import InfoIcon from '@mui/icons-material/Info';
-import { useAppDispatch } from "../store/hooks/storeHooks";
-import { sort, selectCity } from "../store/slices/weatherSlice";
+import InfoIcon from "@mui/icons-material/Info";
+import { useContext } from "react";
+import WeatherContext from "../store/WeatherContext";
 
 interface ICitiesTableProps {
   cities: City[];
@@ -23,15 +23,15 @@ interface ICitiesTableProps {
 const CitiesTable = (props: ICitiesTableProps) => {
   const { cities, removeCity } = props;
 
-  const dispatch = useAppDispatch();
+  const context = useContext(WeatherContext);
 
   return (
-    <TableContainer component={Paper} sx={{maxHeight: 400}}>
+    <TableContainer component={Paper} sx={{ maxHeight: 400 }}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>
-              <TableSortLabel active={true} onClick={() => dispatch(sort())}>
+              <TableSortLabel active={true} onClick={() => context.sort()}>
                 City
               </TableSortLabel>
             </TableCell>
@@ -60,11 +60,9 @@ const CitiesTable = (props: ICitiesTableProps) => {
                 <IconButton onClick={() => removeCity(city.id)}>
                   <DeleteOutlineIcon />
                 </IconButton>
-                <IconButton onClick={() => dispatch(selectCity(city))}>
+                <IconButton onClick={() => context.selectCity(city)}>
                   <InfoIcon />
                 </IconButton>
-                
-
               </TableCell>
             </TableRow>
           ))}

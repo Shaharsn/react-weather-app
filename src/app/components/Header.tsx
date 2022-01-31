@@ -1,5 +1,4 @@
 import { Autocomplete, Card, IconButton, TextField } from "@mui/material";
-import { CITIES } from "../cities";
 import { City } from "../types/types";
 import { useRef, useState } from "react";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -16,12 +15,6 @@ const Header = (props: IHeaderProps) => {
 
   const [optionalCities, setOptionalCities] = useState<string[]>([]);
   const country = useRef<HTMLInputElement | null>(null);
-
-  /*
-  const optionalCites = CITIES.filter((cityLabel) => {
-    return !cityList.find((city) => city.name === cityLabel.label);
-  });
-*/
 
   const addCityToList = (event: any, city: string | null) => {
     if ((event.type === "click" || event.type === "keydown") && city !== null) {

@@ -1,13 +1,15 @@
 import { Container } from "@mui/material";
-import React from "react";
 import "./App.css";
 import Main from "./app/components/Main";
+import { WeatherContextProvider } from "./app/store/WeatherContext";
 
 const App = () => {
   return (
-    <Container maxWidth="lg">
-      <Main />
-    </Container>
+    <WeatherContextProvider>
+      <Container maxWidth="lg">
+        <Main />
+      </Container>
+    </WeatherContextProvider>
   );
 };
 
