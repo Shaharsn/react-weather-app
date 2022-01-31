@@ -1,4 +1,3 @@
-
 export const CITIES: { label: string }[] = [
   { label: "Beersheba" },
   { label: "Tel Aviv" },

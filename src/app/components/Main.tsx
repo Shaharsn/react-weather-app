@@ -9,7 +9,7 @@ import {
   selectCity,
   addCity,
   removeCity,
-  changeUnit
+  changeUnit,
 } from "../store/slices/weatherSlice";
 import CityInfo from "./CityInfo";
 
@@ -17,9 +17,12 @@ const Main = () => {
   const weatherState = useAppSelector(state);
   const dispatch = useAppDispatch();
 
+  
   const [getCityWeather] = useGetCityByName("");
 
   useEffect(() => {
+    console.log("here");
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const lat = position.coords.latitude;
@@ -32,7 +35,9 @@ const Main = () => {
             return response.json();
           })
           .then((payload) => {
-            if (!weatherState.cities.find((city) => city.name === payload.city)) {
+            if (
+              !weatherState.cities.find((city) => city.name === payload.city)
+            ) {
               getCityWeather({ variables: { name: payload.city } }).then(
                 (res) => {
                   if (res && res.data && res.data?.getCityByName) {
@@ -47,14 +52,12 @@ const Main = () => {
       (err) => {
         console.log(err);
 
-        getCityWeather({ variables: { name: "Tel Aviv" } }).then(
-          (res) => {
-            if (res && res.data && res.data?.getCityByName) {
-              dispatch(selectCity(res.data.getCityByName));
-              dispatch(addCity(res.data.getCityByName));
-            }
+        getCityWeather({ variables: { name: "Tel Aviv" } }).then((res) => {
+          if (res && res.data && res.data?.getCityByName) {
+            dispatch(selectCity(res.data.getCityByName));
+            dispatch(addCity(res.data.getCityByName));
           }
-        );
+        });
       }
     );
   }, []);
@@ -74,7 +77,12 @@ const Main = () => {
   return (
     <Card sx={{ maxWidth: 1500, marginTop: 5 }}>
       <CardContent>
-        <Header cityList={weatherState.cities} unit={weatherState.unit} addCity={addCityToList} setUnit={() => dispatch(changeUnit())}/>
+        <Header
+          cityList={weatherState.cities}
+          unit={weatherState.unit}
+          addCity={addCityToList}
+          setUnit={() => dispatch(changeUnit())}
+        />
         <br />
 
         <CitiesTable
@@ -83,7 +91,7 @@ const Main = () => {
         />
         <br />
         {weatherState.selectedCity && (
-          <CityInfo city={weatherState.selectedCity} unit={weatherState.unit}/>
+          <CityInfo city={weatherState.selectedCity} unit={weatherState.unit} />
         )}
       </CardContent>
     </Card>
