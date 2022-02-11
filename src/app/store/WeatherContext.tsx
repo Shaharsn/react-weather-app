@@ -109,7 +109,8 @@ export const WeatherContextProvider = (props: IWeatherContextProvider) => {
     if (unit === "F") {
       setCities((currentCities) => {
         return currentCities.map((city) => {
-          let updatedCity = { ...city };
+          let updatedCity = JSON.parse(JSON.stringify(city));
+
           if (updatedCity.weather) {
             updatedCity.weather.temperature.actual = fahrenheitToCelsius(
               city.weather?.temperature.actual || 0
@@ -123,7 +124,8 @@ export const WeatherContextProvider = (props: IWeatherContextProvider) => {
     } else {
       setCities((currentCities) => {
         return currentCities.map((city) => {
-          let updatedCity = { ...city };
+          let updatedCity = JSON.parse(JSON.stringify(city));
+
           if (updatedCity.weather) {
             updatedCity.weather.temperature.actual = celsiusToFahrenheit(
               city.weather?.temperature.actual || 0
