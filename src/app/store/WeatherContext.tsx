@@ -38,20 +38,12 @@ export const WeatherContextProvider = (props: IWeatherContextProvider) => {
     initialWeatherContextState
   );
 
-  /*
-  const storageCitiesJson = localStorage.getItem("cities") || "";
-
-  if (storageCitiesJson !== "" && storageCitiesJson !== "[]") {
-    console.log(storageCitiesJson);
-
-    weatherState.cities = JSON.parse(storageCitiesJson);
-  }
-*/
+/*
 
   useEffect(() => {
     localStorage.setItem("cities", JSON.stringify(weatherState.cities));
   }, [weatherState.cities]);
-
+*/
   return (
     <WeatherContext.Provider
       value={{ state: weatherState, dispatch: dispatch }}
