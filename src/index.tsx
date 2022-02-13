@@ -5,12 +5,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "./app/hoc/Apollo";
+import { WeatherContextProvider } from "./app/store/WeatherContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ApolloProvider client={apolloClient}>
-      <App />
-    </ApolloProvider>
+    <WeatherContextProvider>
+      <ApolloProvider client={apolloClient}>
+        <App />
+      </ApolloProvider>
+    </WeatherContextProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

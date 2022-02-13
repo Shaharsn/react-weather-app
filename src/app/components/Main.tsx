@@ -1,18 +1,24 @@
 import { Card, CardContent } from "@mui/material";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useGetCityByName } from "../graphQL/wether";
 import CitiesTable from "./CitiesTable";
 import Header from "./Header";
 import CityInfo from "./CityInfo";
-import WeatherContext from "../store/WeatherContext";
+import { useStoreContext } from "../store/WeatherHook";
+import {
+  addCity,
+  changeUnit,
+  removeCity,
+  selectCity,
+} from "../store/weatherReducer";
 
 const Main = () => {
-  const context = useContext(WeatherContext);
+  const { state, dispatch } = useStoreContext();
   const [getCityWeather] = useGetCityByName("");
 
-  useEffect(() => {
-    console.log("here");
+  console.log(state);
 
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const lat = position.coords.latitude;
@@ -25,39 +31,29 @@ const Main = () => {
             return response.json();
           })
           .then((payload) => {
-            if (!context.cities.find((city) => city.name === payload.city)) {
-              getCityWeather({ variables: { name: payload.city } }).then(
-                (res) => {
-                  if (res && res.data && res.data?.getCityByName) {
-                    context.selectCity(res.data.getCityByName);
-                    context.addCity(res.data.getCityByName);
-                  }
-                }
-              );
+            if (!state.cities.find((city) => city.name === payload.city)) {
+              addCityToList(payload.city, true);
             }
           });
       },
       (err) => {
-        console.log(err);
-
-        getCityWeather({ variables: { name: "Tel Aviv" } }).then((res) => {
-          if (res && res.data && res.data?.getCityByName) {
-            context.selectCity(res.data.getCityByName);
-            context.addCity(res.data.getCityByName);
-          }
-        });
+        addCityToList("Tel Aviv", true);
       }
     );
   }, []);
 
   const removeCityFromList = (cityId: string) => {
-    context.removeCity(cityId);
+    dispatch(removeCity(cityId));
   };
 
-  const addCityToList = (cityToAdd: string) => {
+  const addCityToList = (cityToAdd: string, selectTheCity: boolean) => {
     getCityWeather({ variables: { name: cityToAdd } }).then((res) => {
       if (res && res.data && res.data?.getCityByName) {
-        context.addCity(res.data.getCityByName);
+        dispatch(addCity(res.data.getCityByName));
+
+        if(selectTheCity) {
+          dispatch(selectCity(res.data.getCityByName.id));
+        }
       }
     });
   };
@@ -66,17 +62,20 @@ const Main = () => {
     <Card sx={{ maxWidth: 1500, marginTop: 5 }}>
       <CardContent>
         <Header
-          cityList={context.cities}
-          unit={context.unit}
+          cityList={state.cities}
+          unit={state.unit}
           addCity={addCityToList}
-          setUnit={() => context.changeUnit()}
+          setUnit={() => dispatch(changeUnit())}
         />
         <br />
 
-        <CitiesTable cities={context.cities} removeCity={removeCityFromList} />
+        <CitiesTable cities={state.cities} removeCity={removeCityFromList} />
         <br />
-        {context.selectedCity && (
-          <CityInfo city={context.selectedCity} unit={context.unit} />
+        {state.selectedCity && (
+          <CityInfo
+            city={state.cities.find((city) => city.id === state.selectedCity)}
+            unit={state.unit}
+          />
         )}
       </CardContent>
     </Card>

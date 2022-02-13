@@ -6,7 +6,7 @@ import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 interface IHeaderProps {
   cityList: City[];
   unit: string;
-  addCity: (cityToAdd: string) => void;
+  addCity: (cityToAdd: string, selectCity: boolean) => void;
   setUnit: () => void;
 }
 
@@ -18,7 +18,7 @@ const Header = (props: IHeaderProps) => {
 
   const addCityToList = (event: any, city: string | null) => {
     if ((event.type === "click" || event.type === "keydown") && city !== null) {
-      addCity(city);
+      addCity(city, false);
     }
   };
 
@@ -42,7 +42,6 @@ const Header = (props: IHeaderProps) => {
       }
     )
       .then((response) => {
-        console.log(response);
         return response.json();
       })
       .then((payload) => {
@@ -51,7 +50,6 @@ const Header = (props: IHeaderProps) => {
           cities.push(element.city);
         });
 
-        console.log(cities);
         setOptionalCities(
           cities.filter((cityLabel) => {
             return !cityList.find((city) => city.name === cityLabel);

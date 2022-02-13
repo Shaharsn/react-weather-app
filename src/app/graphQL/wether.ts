@@ -85,7 +85,6 @@ export const useGetCityByName = (name: String) => {
 };
 
 export const useGetCityById = (id: String[]) => {
-  console.log(id);
   return useQuery<ICityByIdResponse, ICityByIdInput>(GET_CITY_BY_ID, {
     variables: { id },
   });
